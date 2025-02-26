@@ -1,8 +1,10 @@
 import React, { useMemo } from 'react'
 import { useState } from 'react'
+import { useBudget } from '../hooks/useBudget'
 
 export default function ButgetForm() {
     const [budget, setBudget] = useState(0)
+    const {dispatch}=useBudget()// hace uso de dispatch
 
     const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
         console.log(e.target.valueAsNumber)
@@ -11,8 +13,15 @@ export default function ButgetForm() {
     const isValid=useMemo(()=>{
         return isNaN(budget) || budget<=0
     },[budget])
+
+    const handelSubmit=(e:React.FormEvent<HTMLFormElement>)=>{
+        e.preventDefault()
+        console.log('enviando presupuesto')
+        dispatch({type:'add-budget',payload:{budget}})// activa el reducer
+    }
+
   return (
-        <form className='space-y-5'>
+        <form className='space-y-5' onSubmit={handelSubmit}>
             <div className='flex flex-col space-y-5'>
                 <label htmlFor="budget" className='text-4xl text-blue-600 font-bold text-center'>
                     Definir Presupuesto
